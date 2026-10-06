@@ -1,0 +1,10 @@
+
+POST http://localhost:8081/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "talaba123",
+  "email": "talaba@student.uz",
+  "password": "parol12345"
+}
+
