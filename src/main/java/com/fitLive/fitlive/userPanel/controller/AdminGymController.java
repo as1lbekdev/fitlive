@@ -3,6 +3,10 @@ package com.fitLive.fitlive.userPanel.controller;
 import com.fitLive.fitlive.userPanel.dto.GymRequestDto;
 import com.fitLive.fitlive.userPanel.dto.GymResponseDto;
 import com.fitLive.fitlive.userPanel.service.GymService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
 import jakarta.validation.Valid;
@@ -16,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/admin/gyms")
 @RequiredArgsConstructor
+@Tag(name = "Fitnes zallar (admin)", description = "Zallarni boshqarish")
+
 public class AdminGymController {
 
     private final GymService gymService;
@@ -46,9 +52,23 @@ public class AdminGymController {
         gymService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+
+    @Operation(summary = "Zalga rasm yuklash",
+            description = "JPG, PNG yoki WEBP, 5 MB gacha. Maydon nomi: image")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Rasm saqlandi"),
+            @ApiResponse(responseCode = "400", description = "Fayl noto'g'ri formatda yoki tanlanmagan"),
+            @ApiResponse(responseCode = "404", description = "Zal topilmadi"),
+            @ApiResponse(responseCode = "413", description = "Rasm 5 MB dan katta")
+    })
     @PostMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<GymResponseDto> uploadImage(@PathVariable Long id,
                                                       @RequestParam("image") MultipartFile image) {
         return ResponseEntity.ok(gymService.updateImage(id, image));
     }
+
+
+
+
 }
