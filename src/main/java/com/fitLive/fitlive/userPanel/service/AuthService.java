@@ -1,5 +1,7 @@
 package com.fitLive.fitlive.userPanel.service;
 
+import com.fitLive.fitlive.userPanel.dto.LoginDto;
+import com.fitLive.fitlive.userPanel.dto.LoginRequestDto;
 import com.fitLive.fitlive.userPanel.dto.UserResponseDto;
 import com.fitLive.fitlive.userPanel.model.User;
 import com.fitLive.fitlive.userPanel.repository.UserRepository;
@@ -52,6 +54,18 @@ public class AuthService {
         return "Ro'yxatdan o'tish muvaffaqiyatli yakunlandi.";
     }
 
+    public UserResponseDto login(LoginDto request) {
+
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("Username yoki parol xato"));
+
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Username yoki parol xato");
+        }
+
+        return new UserResponseDto(user.getId(), user.getUsername(),user.getEmail(),user.isVerified());
+    }
     @Transactional
     public String verifyUser(String email, String code) {
         User user = userRepository.findByEmail(email)

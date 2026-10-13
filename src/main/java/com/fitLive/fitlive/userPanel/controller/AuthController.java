@@ -1,6 +1,7 @@
 package com.fitLive.fitlive.userPanel.controller;
 
 
+import com.fitLive.fitlive.userPanel.dto.LoginDto;
 import com.fitLive.fitlive.userPanel.dto.RegisterDto;
 import com.fitLive.fitlive.userPanel.dto.UserResponseDto;
 import com.fitLive.fitlive.userPanel.dto.VerifyDto;
@@ -23,6 +24,12 @@ public class AuthController {
     public ResponseEntity<String> register(@Valid @RequestBody RegisterDto registerDto) {
         String response=authService.register(registerDto.getUsername(), registerDto.getEmail(), registerDto.getPassword());
         return ResponseEntity.ok(response);
+    }
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto) {
+        String response= String.valueOf(authService.login(loginDto));
+        return ResponseEntity.ok(response);
+
     }
 
     @PostMapping("/verify")
